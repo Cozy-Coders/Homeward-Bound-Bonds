@@ -6,7 +6,7 @@ const helmet = require("helmet");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const multer = require("multer")
-const { Users } = require("./models");
+const { Users, Pets } = require("./models");
 
 const app = express();
 const port = 3000;
