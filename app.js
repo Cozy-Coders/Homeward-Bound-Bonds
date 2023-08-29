@@ -23,6 +23,22 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
+app.post("/pet-profile", async (req, res) => {
+    const { name, pics, age, gender, weight, type, bio, isAdopted, ownerId } = req.body
+    const newPet = await Pets.create({
+        name, 
+        pics, 
+        age, 
+        gender, 
+        weight, 
+        type, 
+        bio, 
+        isAdopted, 
+        ownerId
+    })
+     res.status(201).json(newPet); 
+});
+
 app.get("/signup", (req, res) => {
   res.render("sign-up");
 });
