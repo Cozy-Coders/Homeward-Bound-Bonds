@@ -40,12 +40,13 @@ app.use(morgan('tiny'))
 app.get("/", (req, res) => {
   res.render("home", {
     partials: {
-      nav: "partials/nav"
+      nav: "partials/nav",
+      // mobilenav: "partials/mobilenav"
     }
   });
 });
 
-app.post("/pet-profile", async (req, res) => {
+app.post("/pet/new", async (req, res) => {
   const { name, pics, age, gender, weight, type, bio, isAdopted, ownerId } =
     req.body;
   const newPet = await Pets.create({
@@ -59,7 +60,7 @@ app.post("/pet-profile", async (req, res) => {
     isAdopted,
     ownerId,
   });
-  res.status(201).json(newPet);
+  res.redirect("/");
 });
 
 //placeholder update route//
@@ -138,8 +139,18 @@ app.post("/user/signin", async (req, res) => {
       
   });
 
-app.get("/profile/pet", (req, res) => {
-  res.render("pet-profile");
+app.get("/profile/pet/:id", checkAuth, async (req, res) => {
+  const { id } = req.params;
+  const pet = await Pets.findOne({
+    where: {
+      id
+    }
+  });
+  res.render("pet-profile", {
+    locals: { 
+      bio: pet.bio,    
+    },
+});
 });
 
 app.get("/contact", (req, res) => {
@@ -149,6 +160,14 @@ app.get("/contact", (req, res) => {
 
 function checkAuth(req, res, next) {
   if(req.session.user){
+      next()
+    } else {
+      res.redirect("/signin")
+    }
+  } 
+  
+
+function checkId(req, res, next) {
     const sessId = req.session.user.id
     const paramId = parseInt(req.params.id )   
     if(sessId == paramId){
@@ -156,13 +175,11 @@ function checkAuth(req, res, next) {
     } else {
       res.redirect("/")
     }
-  } else{
-    res.redirect("/")
-  }
-}
+  } 
 
 
-app.get("/profile/user/:id", checkAuth, async (req, res) => {
+
+app.get("/profile/user/:id", checkAuth, checkId, async (req, res) => {
   const { id } = req.params;
   const user = await Users.findOne({
     where: {
@@ -176,6 +193,10 @@ app.get("/profile/user/:id", checkAuth, async (req, res) => {
       email: user.email
     
     },
+    partials: {
+      nav: "partials/nav",
+      // mobilenav: "partials/mobilenav"
+    }
 
 });
 })
