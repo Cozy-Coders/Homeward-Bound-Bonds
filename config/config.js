@@ -28,6 +28,12 @@ module.exports = {
           database: process.env.C_DATABASE,
           host: process.env.C_HOST,
           port: process.env.DB_PORT,
-          dialect: "postgres"
+          dialect: "postgres",
+          dialectOptions: {
+            ssl: {
+              require: true, 
+              rejectUnauthorized: false
+            }}
+      },
          
-        }}
+        }
