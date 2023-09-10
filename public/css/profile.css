@@ -249,4 +249,8 @@ p {
     .profile-container {
         max-width: 65%
     }
+
+    .emailSize {
+        font-size: 12px;
+    }
     }
